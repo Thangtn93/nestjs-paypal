@@ -5,15 +5,15 @@
 ## Installation
 
 ```
-npm i @z9fr/paypal-payment
-yarn add @z9fr/paypal-payment
+npm i @thangtn/paypal-payment
+yarn add @thangtn/paypal-payment
 ```
 
 ## Initialization
 
 ```
 import { Module } from '@nestjs/common';
-import { PaypalPaymentModule } from '@z9fr/paypal-payment';
+import { PaypalPaymentModule } from '@thangtn/paypal-payment';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configurations from './configurations';
 
@@ -61,7 +61,7 @@ import {
   CreatePaypalOrderDto,
   InjectScandiniaviaPaypal,
   PaypalPaymentService,
-} from '@z9fr/paypal-payment';
+} from '@thangtn/paypal-payment';
 
 
 const orderPayload: CreatePaypalOrderDto = {

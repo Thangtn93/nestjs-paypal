@@ -1,5 +1,5 @@
 {
-  "name": "@z9fr/paypal-payment",
+  "name": "@thangtn/paypal-payment",
   "version": "0.1.4",
   "description": "",
   "repository": "https://github.com/z9fr/nestjs-paypal",
