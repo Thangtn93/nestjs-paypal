@@ -1,6 +1,6 @@
 {
   "name": "@thangtn/paypal-payment",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "repository": "https://github.com/z9fr/nestjs-paypal",
   "author": "",
