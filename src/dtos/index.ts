@@ -20,3 +20,4 @@ export * from './purchase-unit-request.dto';
 export * from './paypal-tax-info.dto';
 export * from './common';
 export * from './card';
+export * from './subscriptions';

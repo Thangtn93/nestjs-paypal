@@ -1,4 +1,5 @@
 export * from './paypal-payment.module';
+export * from './paypal-subscription.module';
 export * from './services';
 export * from './dtos';
 export * from './errors';
