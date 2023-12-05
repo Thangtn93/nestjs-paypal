@@ -47,4 +47,6 @@ export class SubscriberName {
     readonly subscriber: Subscriber;
     readonly application_context: ApplicationContext;
   }
-  
+  export class CreateReasonDto {
+    reason: string;
+  }

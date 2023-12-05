@@ -16,7 +16,8 @@ import {
   CreatePaypalProductDto,
   CreatePaypalPlanDto,
   CreateSubscriptionDto,
-  AuthorizeOrderHeadersDto
+  AuthorizeOrderHeadersDto,
+  CreateReasonDto
 } from '@app/dtos';
 // import { UpdatePaypalOrderDto } from '@app/dtos/order/update-paypal-order.dto';
 import { PaymentSourceResponseDto } from '@app/dtos/payment-source-response.dto';
@@ -107,15 +108,15 @@ export class PaypalSubscriptionService {
         };
       });
   }
-   async capturePaymentForOrder(
-    orderId: string,
+   async captureSubscriptionOrder(
+    id: string,
     payload: PaymentSourceResponseDto,
     headers?: AuthorizeOrderHeadersDto,
   ): Promise<PaypalOrderDto> {
     const _headers = await this._preparePaypalRequestHeaders(headers);
     const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
     return this.axiosInstance
-      .post(`${apiUrl}/v2/checkout/orders/${orderId}/capture`, payload, {
+      .post(`${apiUrl}/v1/billing/subscriptions/${id}/capture`, payload, {
         headers: _headers,
       })
       .then((r) => r.data)
@@ -126,114 +127,61 @@ export class PaypalSubscriptionService {
         };
       });
   }
-  // async cancelSubscription(
-  //   subscriptionPayload: CreateSubscriptionDto,
-  //   headers?: InitiateOrderHeadersDto,
-  // ): Promise<PaypalOrderDto> {
-  //   const _headers = await this._preparePaypalRequestHeaders(headers);
-  //   const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
-
-  //   return this.axiosInstance
-  //     .post(`${apiUrl}/v1/billing/subscriptions`, subscriptionPayload, {
-  //       headers: _headers,
-  //     })
-  //     .then((r) => r.data)
-  //     .catch((e) => {
-  //       console.log(e);
-  //       throw {
-  //         ...PaypalErrorsConstants.INITIATE_ORDER_FAILED,
-  //         nativeError: e?.response?.data || e,
-  //       };
-  //     });
-  // }
-  // async updateOrder(
-  //   orderId: string,
-  //   updateOrderDto: UpdatePaypalOrderDto[],
-  // ): Promise<{ message: string }> {
-  //   const _headers = await this._preparePaypalRequestHeaders();
-  //   const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
-  //   return this.axiosInstance
-  //     .patch(`${apiUrl}/v2/checkout/orders/${orderId}`, updateOrderDto, {
-  //       headers: _headers,
-  //     })
-  //     .then((r) => {
-  //       if (r.status === 204) {
-  //         return {
-  //           message: `Order updated successfully.!`,
-  //         };
-  //       }
-  //       return r.data;
-  //     })
-  //     .catch((e) => {
-  //       throw {
-  //         ...PaypalErrorsConstants.UPDATE_ORDER_FAILED,
-  //         nativeError: e?.response?.data || e,
-  //       };
-  //     });
-  // }
-
-  // async getOrderDetails(orderId: string): Promise<PaypalOrderDto> {
-  //   const headers = await this._preparePaypalRequestHeaders();
-  //   const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
-  //   return this.axiosInstance
-  //     .get(`${apiUrl}/v2/checkout/orders/${orderId}`, {
-  //       headers,
-  //     })
-  //     .then((r) => {
-  //       if (r.status === 200) {
-  //         return r.data;
-  //       }
-  //       throw {
-  //         message: 'Un-expected error',
-  //         data: r.data,
-  //       };
-  //     })
-  //     .catch((e) => {
-  //       throw {
-  //         ...PaypalErrorsConstants.GET_ORDER_FAILED,
-  //         nativeError: e?.response?.data || e,
-  //       };
-  //     });
-  // }
-
-  // async authorizePaymentForOrder(
-  //   orderId: string,
-  //   payload: PaymentSourceResponseDto,
-  //   headers?: AuthorizeOrderHeadersDto,
-  // ): Promise<PaypalOrderDto> {
-  //   const _headers = await this._preparePaypalRequestHeaders(headers);
-  //   const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
-
-  //   return this.axiosInstance
-  //     .post(`${apiUrl}/v2/checkout/orders/${orderId}/authorize`, payload, {
-  //       headers: _headers,
-  //     })
-  //     .then((r) => r.data)
-  //     .catch((e) => {
-  //       throw {
-  //         ...PaypalErrorsConstants.AUTHORIZE_ORDER_FAILED,
-  //         nativeError: e?.response?.data || e,
-  //       };
-  //     });
-  // }
-
-  // async capturePaymentForOrder(
-  //   orderId: string,
-  //   payload: PaymentSourceResponseDto,
-  //   headers?: AuthorizeOrderHeadersDto,
-  // ): Promise<PaypalOrderDto> {
-  //   const _headers = await this._preparePaypalRequestHeaders(headers);
-  //   const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
-  //   return this.axiosInstance
-  //     .post(`${apiUrl}/v2/checkout/orders/${orderId}/capture`, payload, {
-  //       headers: _headers,
-  //     })
-  //     .then((r) => r.data)
-  //     .catch((e) => {
-  //       throw {
-  //         ...PaypalErrorsConstants.CAPTURE_ORDER_FAILED,
-  //         nativeError: e?.response?.data || e,
-  //       };
-  //     });
-  // }
+  async suspendSubscription(
+    id: string,
+    payload: CreateReasonDto,
+    headers?: AuthorizeOrderHeadersDto,
+  ): Promise<PaypalOrderDto> {
+    const _headers = await this._preparePaypalRequestHeaders(headers);
+    const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
+    return this.axiosInstance
+      .post(`${apiUrl}/v1/billing/subscriptions/${id}/suspend`, payload, {
+        headers: _headers,
+      })
+      .then((r) => r.data)
+      .catch((e) => {
+        throw {
+          ...PaypalErrorsConstants.CAPTURE_ORDER_FAILED,
+          nativeError: e?.response?.data || e,
+        };
+      });
+  }
+  async activateSubscription(
+    id: string,
+    payload: CreateReasonDto,
+    headers?: AuthorizeOrderHeadersDto,
+  ): Promise<PaypalOrderDto> {
+    const _headers = await this._preparePaypalRequestHeaders(headers);
+    const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
+    return this.axiosInstance
+      .post(`${apiUrl}/v1/billing/subscriptions/${id}/activate`, payload, {
+        headers: _headers,
+      })
+      .then((r) => r.data)
+      .catch((e) => {
+        throw {
+          ...PaypalErrorsConstants.CAPTURE_ORDER_FAILED,
+          nativeError: e?.response?.data || e,
+        };
+      });
+  }
+  async cancelSubscription(
+    id: string,
+    payload: CreateReasonDto,
+    headers?: AuthorizeOrderHeadersDto,
+  ): Promise<PaypalOrderDto> {
+    const _headers = await this._preparePaypalRequestHeaders(headers);
+    const apiUrl = this.paypalUtilsService.getApiUrl(this.options.environment);
+    return this.axiosInstance
+      .post(`${apiUrl}/v1/billing/subscriptions/${id}/cancel`, payload, {
+        headers: _headers,
+      })
+      .then((r) => r.data)
+      .catch((e) => {
+        throw {
+          ...PaypalErrorsConstants.CAPTURE_ORDER_FAILED,
+          nativeError: e?.response?.data || e,
+        };
+      });
+  }
 }
